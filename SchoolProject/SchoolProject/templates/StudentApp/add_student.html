@@ -1,0 +1,13 @@
+<form action="../add/" method="POST">
+    {% csrf_token %}
+    Name: <input type="text" name="name" value=""><br>
+    Course: <input type="text" name="course" value=""><br>
+    Gender: Male<input type="radio" name="gender" value="male">
+            Female<input type="radio" name="gender" value="female"><br>
+    Rollno: <input type="number" name="roll" value="1"><br>
+    Fees: <input type="text" name="fees" value="0"><br>
+    <input type="submit" value="submit" name="submit">
+    {% if message %}
+        {{message}}
+    {% endif %}
+</form>

@@ -1,0 +1,218 @@
+<!-- {% if latest_student_list %}
+    <ul>
+        {% for student in latest_student_list %}
+            <li>
+                <a href="/student/{{student.id}}/">{{student.name}}</a>
+                <a href="/student/{{student.id}}/student_delete">|Delete</a> 
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No Students are available</p>
+{% endif %} -->
+
+<html>
+    <head>
+        <title>Home</title>
+        <!-- <link rel="stylesheet" href="css/style.css"> -->
+        <style>
+            body {
+                background-color: wheat;
+            }
+            #all, #form {
+                text-align: center;
+            }
+            #all table {
+                background-color: white;
+            }
+            #all table, #form table {
+                display: inline-block;
+            }
+            #all td {
+                text-align: left;
+                padding: 1px;
+            }
+            #all th {
+                background-color: aqua;
+            }
+            #all tr:nth-child(even) {
+                background-color:darkgray;
+            }
+
+            #all .del {
+                background-color: darkred;
+                color: white;
+            }
+
+            #all .del:hover {
+                color: yellowgreen;
+            }
+
+            #all .upd {
+                background-color: gold;
+            }
+            #all .upd:hover {
+                color: white;
+            } 
+
+            #form input {
+                margin: 5px 2px;
+            }
+
+            #form input:focus {
+                background-color: yellowgreen;
+            }
+
+            #submit:hover {
+                background-color: yellowgreen
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            updateMode = 0
+            $(document).ready(function(){              
+                getlist()
+            });
+            function getlist()
+            {
+                $("#all").html("Downloading....")
+                var myurl = "http://127.0.0.1:8000/student/student_api/students/";
+                $.get(myurl, function(data,status) {
+                    var appusers = data;
+                    var result = "<table border=1 style='border-collapse:collapse'>";
+                    result += "<tr><th align = 'center'>Id</th><th align = 'center'>Name</th><th align = 'center'>Course</th><th align = 'center'>gender</th><th align = 'center'>rollno</th><th align = 'center'>fees</th><th align = 'center'>Publish Date</th><th></th><th></th></tr>"
+                    for (let index = 0; index < appusers.length; index++) {
+                        result += "<tr><td align = 'center'>"+ appusers[index].id +"</td><td align = 'center'>"+ appusers[index].name +"</td><td align = 'center'>"+ appusers[index].course +"</td><td align = 'center'>"+ appusers[index].gender +"</td>"+"</td><td align = 'center'>"+ appusers[index].rollno +"</td><td align = 'center'>"+ appusers[index].fees +"</td><td align = 'center'>"+ appusers[index].pub_date +"</td><td><input type='button' class='del' onclick='deleteAppUser("+ appusers[index].id +")' value='delete' /><td><input type='button' class='upd' onclick='fillAppUserData("+ JSON.stringify(appusers[index]) +")' value='update' /></td></tr>";
+                    }
+                    result += "</table>";
+                    $("#all").html(result);
+                    });
+            }
+
+            function sublist()
+            {
+                var name = $("#name").val();
+                var course = $("#course").val(); 
+                var gender = $("input[name='gender']:checked").val();
+                var rollno = $("#roll").val();
+                var fees = $("#fees").val();         
+                var dic = {
+                    "name" : name,
+                    "course" : course,
+                    "gender" : gender,
+                    "rollno" : rollno,
+                    "fees" : fees
+                }
+                alert(course);
+                //alert(JSON.stringify(dic))
+                $.post("http://127.0.0.1:8000/student/student_api/students/",JSON.stringify(dic),
+                function(data,status){
+                    if (status == 200) {alert("ok")} else {alert("not ok")}
+                    alert("Data: " + data);
+                    document.getElementById("demo").innerHTML = data;
+                });
+                getlist();
+            }
+
+            function deleteAppUser(appUsrID) {
+                // alert("delete:"+appUsrID);
+                $.ajax({
+                    type: "DELETE",
+                    url: "http://127.0.0.1:8000/student/student_api/students/"+ appUsrID +"/",
+                    data: {}
+                }).done(function(msg){
+                    // alert("deleted:");
+                    getlist();
+                })
+            }
+
+            function fillAppUserData(appuser){
+                    $("#upd").show();
+                    $("#ins").hide();
+                    $("#name").val(appuser.name);
+                    $("#course").val(appuser.course);
+                    $("#rollno").val(appuser.rollno);
+                    $("#fees").val(appuser.fees);
+                    if(appuser.gender=='male')
+                    {
+                        $("input:radio[name=gender]").filter('[value=male]').prop('checked',true);
+                    }
+                    else
+                    {
+                        $("input:radio[name=gender]").filter('[value=female]').prop('checked',true);
+                    }
+                    currentAppUserID = appuser.id;
+                    updateMode = 1;
+                }
+
+                function updateAppUser(){
+                    alert("Update:"+ currentAppUserID);
+                    var obj = {
+                            "name" : $("#name").val(),
+                            "course" : $("#course").val(),
+                            "gender" :$("#gender").val(),
+                            "rollno" : $("#roll").val(),
+                            "fees" : $("#fees").val(),
+                        }
+                    $.ajax({
+                        type:"PUT",
+                        url: "http://127.0.0.1:8000/student/student_api/students/"+ currentAppUserID +"/",
+                        data: JSON.stringify(obj),
+                        contentType: 'application/json',
+                    }).done(function(msg){
+                        // alert("Updated");
+                        $("#upd").hide();
+                        $("#ins").show();
+                        getlist();
+                    })
+                }
+
+                function checkmode(){
+                    if (updateMode == 0){
+                        sublist();
+                    }
+                    else{
+                        updateAppUser();
+                        updateMode = 0;
+                    }
+                }
+
+                
+             
+            </script>
+    </head>
+    <body>
+        <div id="all"></div>
+        <div id="form">
+            <h3 id="ins">Insert New Student</h3>
+            <h3 id="upd" style="display: none;">Update Student Details</h3>
+            <form method="POST">
+                <table>
+                    <tr>
+                        <td>Name: </td><td><input type="text" id="name" value=""></td>
+                    </tr>
+                    <tr>
+                        <td>Course: </td><td><input type="text" id="course" value=""></td>
+                    </tr>
+                    <tr>
+                        <td>Gender: </td><td style="float: left;">Male<input type="radio" id="gender" name="gender" value="male"></td><td style="float: left;">Female<input type="radio" id="gender" name="gender" value="female"></td>
+                    </tr>
+                    <tr>
+                        <td>Rollno: </td><td><input type="number" id="roll" value="1"></td>
+                    </tr>
+                    <tr>
+                        <td>Fees: </td><td><input type="text" id="fees" value="0"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;"><input type="button" style="width: 50%;" id="submit" value="submit"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+    <script>
+       $(document).ready( function() {
+            $("#submit").click(checkmode);
+        });
+    </script>
+</html>

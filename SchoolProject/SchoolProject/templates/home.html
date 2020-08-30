@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Home</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+              $("#getlist").click(function(){
+                  getlist()
+              });
+            });
+            function getlist()
+            {
+                $("#all").html("Downloading....")
+                var myurl = "https://jsonplaceholder.typicode.com/users";
+                $.get(myurl, function(data,status) {
+                    var appusers = data;
+                    var result = "<table border=1>";
+                    result += "<tr><td align = 'center'>Id</td><td align = 'center'>Name</td><td align = 'center'>UserName</td><td align = 'center'>Email</td><td align = 'center'>WebSite</td></tr>"
+                    for (let index = 0; index < appusers.length; index++) {
+                        result += "<tr><td align = 'center'>"+ appusers[index].id +"</td><td align = 'center'>"+ appusers[index].name +"</td><td align = 'center'>"+ appusers[index].username +"</td><td align = 'center'>"+ appusers[index].email +"</td>"+"</td><td align = 'center'>"+ appusers[index].website +"</td></tr>";
+                    }
+                    result += "</table>";
+                    $("#all").html(result);
+                    });
+                }
+             
+            </script>
+    </head>
+    <body>
+        Enter School name: <input type="text" name="name" placeholder="name" ><br>
+        Enter School board: <input type="text" name="board" placeholder="board"><br>
+        <input type="button" value="submit">
+        <input type="button" id="getlist" value="get list">
+
+        <div id="all"></div>
+    </body>
+</html>

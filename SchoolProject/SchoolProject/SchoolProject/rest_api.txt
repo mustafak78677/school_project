@@ -1,0 +1,101 @@
+1. List of all Students
+
+URL:- http://127.0.0.1:8000/student/student_api/students/
+
+Request Type: GET
+
+Response: 
+[
+    {
+        "name": "Mustafa Kasarawala",
+        "course": "MCA",
+        "gender": "Male",
+        "rollno": 19114,
+        "fees": 98000.0,
+        "pub_date": "2020-08-06T23:52:27+05:30"
+    }
+]
+
+------------------------------------------------------------------
+
+2. Insert record of student
+
+URL:- http://127.0.0.1:8000/student/student_api/students/
+
+Request Type:- POST
+
+Request Body:-
+{
+    "name":"Mohan Sharma",
+    "course":"BCA",
+    "gender":"Male",
+    "rollno":204,
+    "fees":23000
+}
+
+Response:- 
+{
+    "name": "Mohan Sharma",
+    "course": "BCA",
+    "gender": "Male",
+    "rollno": 204,
+    "fees": 23000.0,
+    "pub_date": "2020-08-13T12:27:55.854250+05:30"
+}
+
+------------------------------------------------------------
+
+3. Particular student details
+
+URL:- http://127.0.0.1:8000/student/student_api/students/8
+
+Request type:- GET
+
+Response:- 
+{
+    "id": 8,
+    "name": "Mohan Sharma",
+    "course": "BCA",
+    "gender": "Male",
+    "rollno": 204,
+    "fees": 23000.0,
+    "pub_date": "2020-08-13T12:27:55.854250+05:30"
+}
+
+----------------------------------------------------------------
+
+4. Update a Particular student record
+
+URL:- http://127.0.0.1:8000/student/student_api/students/8
+
+Request Type:- pub_date
+
+Request Body
+{
+    "name": "Mohan Verma",
+    "course": "MCA",
+    "gender": "Male",
+    "rollno": 205,
+    "fees": 21000.0
+}
+
+Response
+{
+    "id": 8,
+    "name": "Mohan Verma",
+    "course": "MCA",
+    "gender": "Male",
+    "rollno": 205,
+    "fees": 21000.0,
+    "pub_date": "2020-08-13T12:27:55.854250+05:30"
+}
+
+------------------------------------------------------
+
+5. Delete a particular student
+
+URL:- http://127.0.0.1:8000/student/student_api/students/8/
+
+Request Type:- Delete
+
+Response:- Record Deleted Successfully
